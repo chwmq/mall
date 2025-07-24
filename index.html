@@ -1,0 +1,1272 @@
+<!--
+* Copyright (c) 2010 - 2025 chwmq. All rights reserved.
+* https://cc-ai.netlify.app/
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>精品商城</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#FF7D00',
+                        neutral: {
+                            100: '#F5F7FA',
+                            200: '#E4E6EB',
+                            300: '#C9CDD4',
+                            400: '#86909C',
+                            500: '#4E5969',
+                            600: '#272E3B',
+                            700: '#1D2129',
+                        }
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'card': '0 4px 20px rgba(0, 0, 0, 0.08)',
+                        'card-hover': '0 8px 30px rgba(0, 0, 0, 0.12)',
+                    }
+                },
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .animate-fade-in {
+                animation: fadeIn 0.5s ease-in-out;
+            }
+            .animate-slide-up {
+                animation: slideUp 0.5s ease-out;
+            }
+            .animate-pulse-slow {
+                animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="font-inter bg-neutral-100 text-neutral-700 min-h-screen flex flex-col">
+    <!-- 导航栏 -->
+    <header id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300 bg-white/90 backdrop-blur-md shadow-sm">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <!-- Logo -->
+                <a href="#" class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                        <i class="fa fa-shopping-bag text-white"></i>
+                    </div>
+                    <span class="text-xl font-bold text-neutral-700">精品商城</span>
+                </a>
+                
+                <!-- 导航菜单 - 桌面版 -->
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#" class="text-primary font-medium">首页</a>
+                    <a href="#categories" class="text-neutral-600 hover:text-primary transition-colors">分类</a>
+                    <a href="#products" class="text-neutral-600 hover:text-primary transition-colors">商品</a>
+                    <a href="#hot" class="text-neutral-600 hover:text-primary transition-colors">热销</a>
+                    <a href="#about" class="text-neutral-600 hover:text-primary transition-colors">关于我们</a>
+                </nav>
+                
+                <!-- 右侧功能区 -->
+                <div class="flex items-center space-x-4">
+                    <!-- 搜索框 -->
+                    <div class="relative hidden sm:block">
+                        <input type="text" placeholder="搜索商品..." class="w-48 md:w-64 py-2 pl-10 pr-4 rounded-full border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all">
+                        <i class="fa fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400"></i>
+                    </div>
+                    
+                    <!-- 购物车 -->
+                    <a href="#" class="relative p-2 rounded-full hover:bg-neutral-100 transition-colors">
+                        <i class="fa fa-shopping-cart text-neutral-600"></i>
+                        <span class="absolute -top-1 -right-1 w-5 h-5 bg-secondary text-white text-xs rounded-full flex items-center justify-center">3</span>
+                    </a>
+                    
+                    <!-- 用户 -->
+                    <a href="#" class="p-2 rounded-full hover:bg-neutral-100 transition-colors">
+                        <i class="fa fa-user text-neutral-600"></i>
+                    </a>
+                    
+                    <!-- 移动端菜单按钮 -->
+                    <button id="mobile-menu-button" class="md:hidden p-2 rounded-md text-neutral-600 hover:text-primary hover:bg-neutral-100 focus:outline-none">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 移动端菜单 -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-neutral-200 animate-fade-in">
+            <div class="px-4 py-3 space-y-3">
+                <a href="#" class="block py-2 text-primary font-medium">首页</a>
+                <a href="#categories" class="block py-2 text-neutral-600 hover:text-primary transition-colors">分类</a>
+                <a href="#products" class="block py-2 text-neutral-600 hover:text-primary transition-colors">商品</a>
+                <a href="#hot" class="block py-2 text-neutral-600 hover:text-primary transition-colors">热销</a>
+                <a href="#about" class="block py-2 text-neutral-600 hover:text-primary transition-colors">关于我们</a>
+                <div class="relative">
+                    <input type="text" placeholder="搜索商品..." class="w-full py-2 pl-10 pr-4 rounded-full border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all">
+                    <i class="fa fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容 -->
+    <main class="flex-grow pt-16 md:pt-20">
+        <!-- 轮播图 -->
+        <section class="relative bg-neutral-200 overflow-hidden">
+            <div id="carousel" class="relative h-[50vh] min-h-[300px] md:h-[60vh]">
+                <!-- 轮播项 1 -->
+                <div class="carousel-item absolute inset-0 opacity-100 transition-opacity duration-1000">
+                    <div class="absolute inset-0 bg-gradient-to-r from-primary/80 to-primary/40 z-10"></div>
+                    <img src="https://picsum.photos/id/26/1920/1080" alt="夏季新品促销" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 z-20 flex items-center px-6 sm:px-12 lg:px-20">
+                        <div class="max-w-2xl animate-slide-up">
+                            <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold text-white leading-tight">夏季新品上市</h1>
+                            <p class="mt-4 text-[clamp(1rem,2vw,1.25rem)] text-white/90 max-w-xl">探索我们的夏季系列，享受限时优惠。精选商品低至5折，数量有限！</p>
+                            <div class="mt-8">
+                                <a href="#products" class="inline-flex items-center px-6 py-3 bg-white text-primary font-medium rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+                                    立即购买
+                                    <i class="fa fa-arrow-right ml-2"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 轮播项 2 -->
+                <div class="carousel-item absolute inset-0 opacity-0 transition-opacity duration-1000">
+                    <div class="absolute inset-0 bg-gradient-to-r from-secondary/80 to-secondary/40 z-10"></div>
+                    <img src="https://picsum.photos/id/1059/1920/1080" alt="会员专享优惠" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 z-20 flex items-center px-6 sm:px-12 lg:px-20">
+                        <div class="max-w-2xl animate-slide-up">
+                            <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold text-white leading-tight">会员专享优惠</h1>
+                            <p class="mt-4 text-[clamp(1rem,2vw,1.25rem)] text-white/90 max-w-xl">成为会员，享受独家折扣、优先购买权和专属客服服务。立即加入，首单立减100元！</p>
+                            <div class="mt-8">
+                                <a href="#membership" class="inline-flex items-center px-6 py-3 bg-white text-secondary font-medium rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+                                    了解详情
+                                    <i class="fa fa-arrow-right ml-2"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 轮播控制器 -->
+                <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-30 flex space-x-2">
+                    <button class="carousel-dot w-3 h-3 rounded-full bg-white/50 hover:bg-white focus:outline-none transition-colors active"></button>
+                    <button class="carousel-dot w-3 h-3 rounded-full bg-white/50 hover:bg-white focus:outline-none transition-colors"></button>
+                </div>
+                
+                <!-- 轮播箭头 -->
+                <button class="carousel-arrow absolute left-4 top-1/2 transform -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/40 text-white flex items-center justify-center focus:outline-none transition-all">
+                    <i class="fa fa-angle-left text-xl"></i>
+                </button>
+                <button class="carousel-arrow absolute right-4 top-1/2 transform -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/40 text-white flex items-center justify-center focus:outline-none transition-all">
+                    <i class="fa fa-angle-right text-xl"></i>
+                </button>
+            </div>
+        </section>
+        
+        <!-- 分类区域 -->
+        <section id="categories" class="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+            <div class="container mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-neutral-700">商品分类</h2>
+                    <p class="mt-4 text-neutral-500 max-w-2xl mx-auto">探索我们丰富的商品分类，找到你心仪的商品</p>
+                </div>
+                
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6">
+                    <!-- 分类项 1 -->
+                    <a href="#" class="category-item group relative rounded-xl overflow-hidden h-32 sm:h-40 bg-neutral-100 transition-all duration-300 hover:shadow-card-hover hover:-translate-y-1">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
+                        <img src="https://picsum.photos/id/20/400/600" alt="服装" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 z-20 flex flex-col items-center justify-center">
+                            <i class="fa fa-tshirt text-white text-2xl sm:text-3xl mb-2"></i>
+                            <span class="text-white font-medium">服装</span>
+                        </div>
+                    </a>
+                    
+                    <!-- 分类项 2 -->
+                    <a href="#" class="category-item group relative rounded-xl overflow-hidden h-32 sm:h-40 bg-neutral-100 transition-all duration-300 hover:shadow-card-hover hover:-translate-y-1">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
+                        <img src="https://picsum.photos/id/96/400/600" alt="电子产品" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 z-20 flex flex-col items-center justify-center">
+                            <i class="fa fa-headphones text-white text-2xl sm:text-3xl mb-2"></i>
+                            <span class="text-white font-medium">电子产品</span>
+                        </div>
+                    </a>
+                    
+                    <!-- 分类项 3 -->
+                    <a href="#" class="category-item group relative rounded-xl overflow-hidden h-32 sm:h-40 bg-neutral-100 transition-all duration-300 hover:shadow-card-hover hover:-translate-y-1">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
+                        <img src="https://picsum.photos/id/628/400/600" alt="家居" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 z-20 flex flex-col items-center justify-center">
+                            <i class="fa fa-home text-white text-2xl sm:text-3xl mb-2"></i>
+                            <span class="text-white font-medium">家居</span>
+                        </div>
+                    </a>
+                    
+                    <!-- 分类项 4 -->
+                    <a href="#" class="category-item group relative rounded-xl overflow-hidden h-32 sm:h-40 bg-neutral-100 transition-all duration-300 hover:shadow-card-hover hover:-translate-y-1">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
+                        <img src="https://picsum.photos/id/349/400/600" alt="美妆" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 z-20 flex flex-col items-center justify-center">
+                            <i class="fa fa-lipstick text-white text-2xl sm:text-3xl mb-2"></i>
+                            <span class="text-white font-medium">美妆</span>
+                        </div>
+                    </a>
+                    
+                    <!-- 分类项 5 -->
+                    <a href="#" class="category-item group relative rounded-xl overflow-hidden h-32 sm:h-40 bg-neutral-100 transition-all duration-300 hover:shadow-card-hover hover:-translate-y-1">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
+                        <img src="https://picsum.photos/id/365/400/600" alt="图书" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 z-20 flex flex-col items-center justify-center">
+                            <i class="fa fa-book text-white text-2xl sm:text-3xl mb-2"></i>
+                            <span class="text-white font-medium">图书</span>
+                        </div>
+                    </a>
+                    
+                    <!-- 分类项 6 -->
+                    <a href="#" class="category-item group relative rounded-xl overflow-hidden h-32 sm:h-40 bg-neutral-100 transition-all duration-300 hover:shadow-card-hover hover:-translate-y-1">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
+                        <img src="https://picsum.photos/id/1060/400/600" alt="更多分类" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 z-20 flex flex-col items-center justify-center">
+                            <i class="fa fa-th-large text-white text-2xl sm:text-3xl mb-2"></i>
+                            <span class="text-white font-medium">更多分类</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 特色商品区域 -->
+        <section id="products" class="py-16 px-4 sm:px-6 lg:px-8 bg-neutral-50">
+            <div class="container mx-auto">
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+                    <div>
+                        <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-neutral-700">特色商品</h2>
+                        <p class="mt-4 text-neutral-500 max-w-2xl">精选优质商品，满足你的高品质生活需求</p>
+                    </div>
+                    <div class="mt-6 md:mt-0">
+                        <div class="flex space-x-2">
+                            <button class="category-filter px-4 py-2 rounded-full bg-primary text-white font-medium">全部</button>
+                            <button class="category-filter px-4 py-2 rounded-full bg-white text-neutral-600 font-medium hover:bg-neutral-100 transition-colors">新品</button>
+                            <button class="category-filter px-4 py-2 rounded-full bg-white text-neutral-600 font-medium hover:bg-neutral-100 transition-colors">热销</button>
+                            <button class="category-filter px-4 py-2 rounded-full bg-white text-neutral-600 font-medium hover:bg-neutral-100 transition-colors">推荐</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <!-- 商品卡片 1 -->
+                    <div class="product-card group bg-white rounded-xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-2">
+                        <div class="relative">
+                            <img src="https://picsum.photos/id/26/600/800" alt="高级智能手表" class="w-full h-64 object-cover">
+                            <div class="absolute top-3 left-3">
+                                <span class="bg-secondary text-white text-xs px-2 py-1 rounded-full">新品</span>
+                            </div>
+                            <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <button class="quick-view-btn bg-white text-neutral-700 rounded-full p-3 shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex items-center mb-2">
+                                <div class="flex text-yellow-400">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star-half-o"></i>
+                                </div>
+                                <span class="text-neutral-500 text-sm ml-2">4.5 (128)</span>
+                            </div>
+                            <h3 class="font-medium text-lg mb-1">高级智能手表</h3>
+                            <p class="text-neutral-500 text-sm mb-3 line-clamp-2">全功能智能手表，支持心率监测、睡眠分析和运动追踪</p>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="text-primary font-bold text-xl">¥1,299</span>
+                                    <span class="text-neutral-400 line-through text-sm ml-2">¥1,599</span>
+                                </div>
+                                <button class="add-to-cart bg-primary/10 hover:bg-primary/20 text-primary rounded-full p-2 transition-colors">
+                                    <i class="fa fa-shopping-cart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 商品卡片 2 -->
+                    <div class="product-card group bg-white rounded-xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-2">
+                        <div class="relative">
+                            <img src="https://picsum.photos/id/96/600/800" alt="无线蓝牙耳机" class="w-full h-64 object-cover">
+                            <div class="absolute top-3 left-3">
+                                <span class="bg-primary text-white text-xs px-2 py-1 rounded-full">热销</span>
+                            </div>
+                            <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <button class="quick-view-btn bg-white text-neutral-700 rounded-full p-3 shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex items-center mb-2">
+                                <div class="flex text-yellow-400">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                                <span class="text-neutral-500 text-sm ml-2">5.0 (215)</span>
+                            </div>
+                            <h3 class="font-medium text-lg mb-1">无线蓝牙耳机</h3>
+                            <p class="text-neutral-500 text-sm mb-3 line-clamp-2">主动降噪，高清通话，超长续航，舒适佩戴体验</p>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="text-primary font-bold text-xl">¥799</span>
+                                    <span class="text-neutral-400 line-through text-sm ml-2">¥999</span>
+                                </div>
+                                <button class="add-to-cart bg-primary/10 hover:bg-primary/20 text-primary rounded-full p-2 transition-colors">
+                                    <i class="fa fa-shopping-cart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 商品卡片 3 -->
+                    <div class="product-card group bg-white rounded-xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-2">
+                        <div class="relative">
+                            <img src="https://picsum.photos/id/628/600/800" alt="现代简约台灯" class="w-full h-64 object-cover">
+                            <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <button class="quick-view-btn bg-white text-neutral-700 rounded-full p-3 shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex items-center mb-2">
+                                <div class="flex text-yellow-400">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star-o"></i>
+                                </div>
+                                <span class="text-neutral-500 text-sm ml-2">4.0 (96)</span>
+                            </div>
+                            <h3 class="font-medium text-lg mb-1">现代简约台灯</h3>
+                            <p class="text-neutral-500 text-sm mb-3 line-clamp-2">可调节亮度和色温，护眼设计，智能触控开关</p>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="text-primary font-bold text-xl">¥349</span>
+                                    <span class="text-neutral-400 line-through text-sm ml-2">¥429</span>
+                                </div>
+                                <button class="add-to-cart bg-primary/10 hover:bg-primary/20 text-primary rounded-full p-2 transition-colors">
+                                    <i class="fa fa-shopping-cart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 商品卡片 4 -->
+                    <div class="product-card group bg-white rounded-xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-2">
+                        <div class="relative">
+                            <img src="https://picsum.photos/id/349/600/800" alt="天然有机护肤品套装" class="w-full h-64 object-cover">
+                            <div class="absolute top-3 left-3">
+                                <span class="bg-green-500 text-white text-xs px-2 py-1 rounded-full">有机</span>
+                            </div>
+                            <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <button class="quick-view-btn bg-white text-neutral-700 rounded-full p-3 shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex items-center mb-2">
+                                <div class="flex text-yellow-400">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star-half-o"></i>
+                                </div>
+                                <span class="text-neutral-500 text-sm ml-2">4.7 (156)</span>
+                            </div>
+                            <h3 class="font-medium text-lg mb-1">天然有机护肤品套装</h3>
+                            <p class="text-neutral-500 text-sm mb-3 line-clamp-2">温和不刺激，适合各种肤质，深层滋养保湿</p>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="text-primary font-bold text-xl">¥599</span>
+                                    <span class="text-neutral-400 line-through text-sm ml-2">¥799</span>
+                                </div>
+                                <button class="add-to-cart bg-primary/10 hover:bg-primary/20 text-primary rounded-full p-2 transition-colors">
+                                    <i class="fa fa-shopping-cart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 商品卡片 5 -->
+                    <div class="product-card group bg-white rounded-xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-2">
+                        <div class="relative">
+                            <img src="https://picsum.photos/id/365/600/800" alt="畅销科技图书套装" class="w-full h-64 object-cover">
+                            <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <button class="quick-view-btn bg-white text-neutral-700 rounded-full p-3 shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex items-center mb-2">
+                                <div class="flex text-yellow-400">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star-o"></i>
+                                </div>
+                                <span class="text-neutral-500 text-sm ml-2">4.2 (87)</span>
+                            </div>
+                            <h3 class="font-medium text-lg mb-1">畅销科技图书套装</h3>
+                            <p class="text-neutral-500 text-sm mb-3 line-clamp-2">包含人工智能、区块链和云计算等前沿技术领域的入门读物</p>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="text-primary font-bold text-xl">¥299</span>
+                                    <span class="text-neutral-400 line-through text-sm ml-2">¥359</span>
+                                </div>
+                                <button class="add-to-cart bg-primary/10 hover:bg-primary/20 text-primary rounded-full p-2 transition-colors">
+                                    <i class="fa fa-shopping-cart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 商品卡片 6 -->
+                    <div class="product-card group bg-white rounded-xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-2">
+                        <div class="relative">
+                            <img src="https://picsum.photos/id/1060/600/800" alt="户外露营装备套装" class="w-full h-64 object-cover">
+                            <div class="absolute top-3 left-3">
+                                <span class="bg-secondary text-white text-xs px-2 py-1 rounded-full">新品</span>
+                            </div>
+                            <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <button class="quick-view-btn bg-white text-neutral-700 rounded-full p-3 shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex items-center mb-2">
+                                <div class="flex text-yellow-400">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star-half-o"></i>
+                                    <i class="fa fa-star-o"></i>
+                                </div>
+                                <span class="text-neutral-500 text-sm ml-2">3.5 (42)</span>
+                            </div>
+                            <h3 class="font-medium text-lg mb-1">户外露营装备套装</h3>
+                            <p class="text-neutral-500 text-sm mb-3 line-clamp-2">帐篷、睡袋、防潮垫一站式解决方案，适合家庭露营使用</p>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="text-primary font-bold text-xl">¥899</span>
+                                    <span class="text-neutral-400 line-through text-sm ml-2">¥1,199</span>
+                                </div>
+                                <button class="add-to-cart bg-primary/10 hover:bg-primary/20 text-primary rounded-full p-2 transition-colors">
+                                    <i class="fa fa-shopping-cart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 商品卡片 7 -->
+                    <div class="product-card group bg-white rounded-xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-2">
+                        <div class="relative">
+                            <img src="https://picsum.photos/id/20/600/800" alt="时尚休闲背包" class="w-full h-64 object-cover">
+                            <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <button class="quick-view-btn bg-white text-neutral-700 rounded-full p-3 shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex items-center mb-2">
+                                <div class="flex text-yellow-400">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                                <span class="text-neutral-500 text-sm ml-2">5.0 (178)</span>
+                            </div>
+                            <h3 class="font-medium text-lg mb-1">时尚休闲背包</h3>
+                            <p class="text-neutral-500 text-sm mb-3 line-clamp-2">大容量多功能背包，舒适背负系统，防水耐磨面料</p>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="text-primary font-bold text-xl">¥249</span>
+                                    <span class="text-neutral-400 line-through text-sm ml-2">¥329</span>
+                                </div>
+                                <button class="add-to-cart bg-primary/10 hover:bg-primary/20 text-primary rounded-full p-2 transition-colors">
+                                    <i class="fa fa-shopping-cart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 商品卡片 8 -->
+                    <div class="product-card group bg-white rounded-xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-2">
+                        <div class="relative">
+                            <img src="https://picsum.photos/id/1059/600/800" alt="智能空气净化器" class="w-full h-64 object-cover">
+                            <div class="absolute top-3 left-3">
+                                <span class="bg-primary text-white text-xs px-2 py-1 rounded-full">热销</span>
+                            </div>
+                            <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <button class="quick-view-btn bg-white text-neutral-700 rounded-full p-3 shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex items-center mb-2">
+                                <div class="flex text-yellow-400">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star-half-o"></i>
+                                </div>
+                                <span class="text-neutral-500 text-sm ml-2">4.6 (132)</span>
+                            </div>
+                            <h3 class="font-medium text-lg mb-1">智能空气净化器</h3>
+                            <p class="text-neutral-500 text-sm mb-3 line-clamp-2">高效过滤PM2.5，甲醛，过敏原，智能APP控制</p>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="text-primary font-bold text-xl">¥1,599</span>
+                                    <span class="text-neutral-400 line-through text-sm ml-2">¥1,999</span>
+                                </div>
+                                <button class="add-to-cart bg-primary/10 hover:bg-primary/20 text-primary rounded-full p-2 transition-colors">
+                                    <i class="fa fa-shopping-cart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-12 text-center">
+                    <a href="#" class="inline-flex items-center px-6 py-3 bg-white border border-primary text-primary font-medium rounded-lg hover:bg-primary hover:text-white transition-colors">
+                        查看更多商品
+                        <i class="fa fa-long-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 热销商品区域 -->
+        <section id="hot" class="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+            <div class="container mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-neutral-700">热销榜单</h2>
+                    <p class="mt-4 text-neutral-500 max-w-2xl mx-auto">看看大家都在买什么，热门商品限时优惠中</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- 热销商品排行 -->
+                    <div class="bg-neutral-50 rounded-2xl p-6 shadow-sm">
+                        <h3 class="text-xl font-bold mb-6 flex items-center">
+                            <i class="fa fa-fire text-red-500 mr-2"></i>
+                            本周热销TOP5
+                        </h3>
+                        
+                        <div class="space-y-6">
+                            <!-- 热销商品项 1 -->
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white font-bold">1</div>
+                                <img src="https://picsum.photos/id/96/100/100" alt="无线蓝牙耳机" class="w-16 h-16 object-cover rounded-lg">
+                                <div class="flex-grow">
+                                    <h4 class="font-medium">无线蓝牙耳机</h4>
+                                    <div class="flex items-center mt-1">
+                                        <div class="flex text-yellow-400 text-xs">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                        </div>
+                                        <span class="text-neutral-500 text-xs ml-1">5.0 (215)</span>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-bold text-primary">¥799</div>
+                                    <div class="text-xs text-neutral-500 line-through">¥999</div>
+                                </div>
+                            </div>
+                            
+                            <!-- 热销商品项 2 -->
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-neutral-200 rounded-full flex items-center justify-center text-white font-bold">2</div>
+                                <img src="https://picsum.photos/id/26/100/100" alt="高级智能手表" class="w-16 h-16 object-cover rounded-lg">
+                                <div class="flex-grow">
+                                    <h4 class="font-medium">高级智能手表</h4>
+                                    <div class="flex items-center mt-1">
+                                        <div class="flex text-yellow-400 text-xs">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star-half-o"></i>
+                                        </div>
+                                        <span class="text-neutral-500 text-xs ml-1">4.5 (128)</span>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-bold text-primary">¥1,299</div>
+                                    <div class="text-xs text-neutral-500 line-through">¥1,599</div>
+                                </div>
+                            </div>
+                            
+                            <!-- 热销商品项 3 -->
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-neutral-200 rounded-full flex items-center justify-center text-white font-bold">3</div>
+                                <img src="https://picsum.photos/id/1059/100/100" alt="智能空气净化器" class="w-16 h-16 object-cover rounded-lg">
+                                <div class="flex-grow">
+                                    <h4 class="font-medium">智能空气净化器</h4>
+                                    <div class="flex items-center mt-1">
+                                        <div class="flex text-yellow-400 text-xs">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star-half-o"></i>
+                                        </div>
+                                        <span class="text-neutral-500 text-xs ml-1">4.6 (132)</span>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-bold text-primary">¥1,599</div>
+                                    <div class="text-xs text-neutral-500 line-through">¥1,999</div>
+                                </div>
+                            </div>
+                            
+                            <!-- 热销商品项 4 -->
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-neutral-200 rounded-full flex items-center justify-center text-white font-bold">4</div>
+                                <img src="https://picsum.photos/id/349/100/100" alt="天然有机护肤品套装" class="w-16 h-16 object-cover rounded-lg">
+                                <div class="flex-grow">
+                                    <h4 class="font-medium">天然有机护肤品套装</h4>
+                                    <div class="flex items-center mt-1">
+                                        <div class="flex text-yellow-400 text-xs">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star-half-o"></i>
+                                        </div>
+                                        <span class="text-neutral-500 text-xs ml-1">4.7 (156)</span>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-bold text-primary">¥599</div>
+                                    <div class="text-xs text-neutral-500 line-through">¥799</div>
+                                </div>
+                            </div>
+                            
+                            <!-- 热销商品项 5 -->
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-neutral-200 rounded-full flex items-center justify-center text-white font-bold">5</div>
+                                <img src="https://picsum.photos/id/20/100/100" alt="时尚休闲背包" class="w-16 h-16 object-cover rounded-lg">
+                                <div class="flex-grow">
+                                    <h4 class="font-medium">时尚休闲背包</h4>
+                                    <div class="flex items-center mt-1">
+                                        <div class="flex text-yellow-400 text-xs">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                        </div>
+                                        <span class="text-neutral-500 text-xs ml-1">5.0 (178)</span>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-bold text-primary">¥249</div>
+                                    <div class="text-xs text-neutral-500 line-through">¥329</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 限时折扣 -->
+                    <div class="bg-gradient-to-br from-primary to-primary/80 rounded-2xl p-6 shadow-lg text-white">
+                        <h3 class="text-xl font-bold mb-6 flex items-center">
+                            <i class="fa fa-clock-o mr-2"></i>
+                            限时折扣
+                        </h3>
+                        
+                        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <div>
+                                    <p class="text-white/80">剩余时间</p>
+                                    <div class="flex space-x-2 mt-2">
+                                        <div class="bg-white/20 w-10 h-10 rounded-lg flex items-center justify-center font-bold">12</div>
+                                        <span class="text-white/60">:</span>
+                                        <div class="bg-white/20 w-10 h-10 rounded-lg flex items-center justify-center font-bold">34</div>
+                                        <span class="text-white/60">:</span>
+                                        <div class="bg-white/20 w-10 h-10 rounded-lg flex items-center justify-center font-bold">56</div>
+                                    </div>
+                                </div>
+                                <div class="bg-white/20 text-white px-3 py-1 rounded-full text-sm">
+                                    限时8折
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center space-x-4">
+                                <img src="https://picsum.photos/id/628/200/200" alt="现代简约台灯" class="w-24 h-24 object-cover rounded-lg">
+                                <div class="flex-grow">
+                                    <h4 class="font-medium text-lg">现代简约台灯</h4>
+                                    <p class="text-white/80 text-sm mt-1">可调节亮度和色温，护眼设计</p>
+                                    <div class="mt-2 flex items-center">
+                                        <span class="text-white font-bold text-xl">¥279</span>
+                                        <span class="text-white/60 line-through text-sm ml-2">¥349</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button class="mt-6 w-full py-3 bg-white text-primary font-medium rounded-lg hover:bg-white/90 transition-colors">
+                                立即抢购
+                            </button>
+                        </div>
+                        
+                        <div class="mt-6 grid grid-cols-2 gap-4">
+                            <!-- 限时折扣商品 1 -->
+                            <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 hover:bg-white/20 transition-colors cursor-pointer">
+                                <img src="https://picsum.photos/id/365/100/100" alt="畅销科技图书套装" class="w-full h-24 object-cover rounded-lg">
+                                <div class="mt-3">
+                                    <h5 class="font-medium text-sm">畅销科技图书套装</h5>
+                                    <div class="mt-1 flex justify-between items-center">
+                                        <span class="text-white font-bold">¥239</span>
+                                        <span class="bg-white/20 text-white text-xs px-2 py-0.5 rounded-full">7.5折</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 限时折扣商品 2 -->
+                            <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 hover:bg-white/20 transition-colors cursor-pointer">
+                                <img src="https://picsum.photos/id/1060/100/100" alt="户外露营装备套装" class="w-full h-24 object-cover rounded-lg">
+                                <div class="mt-3">
+                                    <h5 class="font-medium text-sm">户外露营装备套装</h5>
+                                    <div class="mt-1 flex justify-between items-center">
+                                        <span class="text-white font-bold">¥719</span>
+                                        <span class="bg-white/20 text-white text-xs px-2 py-0.5 rounded-full">8折</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 用户评价 -->
+        <section class="py-16 px-4 sm:px-6 lg:px-8 bg-neutral-50">
+            <div class="container mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-neutral-700">用户评价</h2>
+                    <p class="mt-4 text-neutral-500 max-w-2xl mx-auto">看看我们的顾客怎么说</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- 评价卡片 1 -->
+                    <div class="bg-white rounded-xl p-6 shadow-card hover:shadow-card-hover transition-all duration-300">
+                        <div class="flex text-yellow-400 mb-4">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                        </div>
+                        <p class="text-neutral-600 mb-6">"这个蓝牙耳机的音质真的很棒，佩戴也很舒适，长时间使用耳朵也不会痛。电池续航也很给力，一次充电可以使用一整天。客服态度也非常好，很满意这次购物！"</p>
+                        <div class="flex items-center">
+                            <img src="https://picsum.photos/id/1005/100/100" alt="用户头像" class="w-12 h-12 rounded-full object-cover">
+                            <div class="ml-3">
+                                <h4 class="font-medium">李明</h4>
+                                <p class="text-neutral-500 text-sm">购买了 无线蓝牙耳机</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 评价卡片 2 -->
+                    <div class="bg-white rounded-xl p-6 shadow-card hover:shadow-card-hover transition-all duration-300">
+                        <div class="flex text-yellow-400 mb-4">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star-half-o"></i>
+                        </div>
+                        <p class="text-neutral-600 mb-6">"智能手表的功能很全面，心率监测和睡眠分析非常准确，帮助我更好地了解自己的健康状况。外观设计也很时尚，同事们都问我在哪里买的。唯一的小缺点是充电有点慢。"</p>
+                        <div class="flex items-center">
+                            <img src="https://picsum.photos/id/1006/100/100" alt="用户头像" class="w-12 h-12 rounded-full object-cover">
+                            <div class="ml-3">
+                                <h4 class="font-medium">王芳</h4>
+                                <p class="text-neutral-500 text-sm">购买了 高级智能手表</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 评价卡片 3 -->
+                    <div class="bg-white rounded-xl p-6 shadow-card hover:shadow-card-hover transition-all duration-300">
+                        <div class="flex text-yellow-400 mb-4">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                        </div>
+                        <p class="text-neutral-600 mb-6">"这款护肤品套装真的很适合我的敏感肌肤，用了一个月，皮肤明显变得更加水润有光泽了。而且包装很精美，送人自用两相宜。物流也很快，下单后第二天就收到了。"</p>
+                        <div class="flex items-center">
+                            <img src="https://picsum.photos/id/1012/100/100" alt="用户头像" class="w-12 h-12 rounded-full object-cover">
+                            <div class="ml-3">
+                                <h4 class="font-medium">张婷</h4>
+                                <p class="text-neutral-500 text-sm">购买了 天然有机护肤品套装</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 关于我们 -->
+        <section id="about" class="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+            <div class="container mx-auto">
+                <div class="flex flex-col lg:flex-row items-center gap-12">
+                    <div class="lg:w-1/2">
+                        <img src="https://picsum.photos/id/1071/800/600" alt="关于我们" class="w-full h-auto rounded-2xl shadow-lg">
+                    </div>
+                    <div class="lg:w-1/2">
+                        <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-neutral-700 mb-6">关于我们</h2>
+                        <p class="text-neutral-600 mb-4">精品商城成立于2018年，是一家专注于提供高品质商品和优质服务的电子商务平台。我们的使命是为消费者提供便捷、安全、愉快的购物体验。</p>
+                        <p class="text-neutral-600 mb-6">我们精选全球优质商品，涵盖电子数码、家居生活、美妆护肤、服饰箱包等多个品类，所有商品均经过严格的品质筛选，确保为消费者提供最优质的产品。</p>
+                        
+                        <div class="grid grid-cols-2 gap-4 mb-8">
+                            <div class="bg-neutral-50 p-4 rounded-lg">
+                                <div class="text-primary text-2xl font-bold mb-1">5000+</div>
+                                <div class="text-neutral-600">优质商品</div>
+                            </div>
+                            <div class="bg-neutral-50 p-4 rounded-lg">
+                                <div class="text-primary text-2xl font-bold mb-1">100万+</div>
+                                <div class="text-neutral-600">满意客户</div>
+                            </div>
+                            <div class="bg-neutral-50 p-4 rounded-lg">
+                                <div class="text-primary text-2xl font-bold mb-1">99%</div>
+                                <div class="text-neutral-600">好评率</div>
+                            </div>
+                            <div class="bg-neutral-50 p-4 rounded-lg">
+                                <div class="text-primary text-2xl font-bold mb-1">24/7</div>
+                                <div class="text-neutral-600">客户服务</div>
+                            </div>
+                        </div>
+                        
+                        <a href="#" class="inline-flex items-center px-6 py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors">
+                            了解更多
+                            <i class="fa fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 订阅区域 -->
+        <section class="py-16 px-4 sm:px-6 lg:px-8 bg-primary/5">
+            <div class="container mx-auto">
+                <div class="max-w-3xl mx-auto text-center">
+                    <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-neutral-700 mb-4">订阅我们的通讯</h2>
+                    <p class="text-neutral-600 mb-8">获取最新产品信息、独家优惠和促销活动</p>
+                    
+                    <form class="flex flex-col sm:flex-row gap-3 max-w-xl mx-auto">
+                        <input type="email" placeholder="输入您的邮箱地址" class="flex-grow px-4 py-3 rounded-lg border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                        <button type="submit" class="px-6 py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors whitespace-nowrap">
+                            立即订阅
+                        </button>
+                    </form>
+                    
+                    <p class="text-neutral-500 text-sm mt-4">我们尊重您的隐私，不会向第三方分享您的信息</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-neutral-700 text-white pt-16 pb-8">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+                <!-- 关于我们 -->
+                <div>
+                    <div class="flex items-center space-x-2 mb-6">
+                        <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+                            <i class="fa fa-shopping-bag text-primary"></i>
+                        </div>
+                        <span class="text-xl font-bold">精品商城</span>
+                    </div>
+                    <p class="text-neutral-300 mb-6">提供高品质商品和优质服务的电子商务平台</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-neutral-600 flex items-center justify-center hover:bg-primary transition-colors">
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-neutral-600 flex items-center justify-center hover:bg-primary transition-colors">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-neutral-600 flex items-center justify-center hover:bg-primary transition-colors">
+                            <i class="fa fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-neutral-600 flex items-center justify-center hover:bg-primary transition-colors">
+                            <i class="fa fa-linkedin"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 快速链接 -->
+                <div>
+                    <h3 class="text-lg font-bold mb-6">快速链接</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-neutral-300 hover:text-white transition-colors">首页</a></li>
+                        <li><a href="#categories" class="text-neutral-300 hover:text-white transition-colors">商品分类</a></li>
+                        <li><a href="#products" class="text-neutral-300 hover:text-white transition-colors">特色商品</a></li>
+                        <li><a href="#hot" class="text-neutral-300 hover:text-white transition-colors">热销榜单</a></li>
+                        <li><a href="#about" class="text-neutral-300 hover:text-white transition-colors">关于我们</a></li>
+                        <li><a href="#" class="text-neutral-300 hover:text-white transition-colors">联系我们</a></li>
+                    </ul>
+                </div>
+                
+                <!-- 客户服务 -->
+                <div>
+                    <h3 class="text-lg font-bold mb-6">客户服务</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-neutral-300 hover:text-white transition-colors">我的账户</a></li>
+                        <li><a href="#" class="text-neutral-300 hover:text-white transition-colors">订单查询</a></li>
+                        <li><a href="#" class="text-neutral-300 hover:text-white transition-colors">配送信息</a></li>
+                        <li><a href="#" class="text-neutral-300 hover:text-white transition-colors">退换政策</a></li>
+                        <li><a href="#" class="text-neutral-300 hover:text-white transition-colors">常见问题</a></li>
+                        <li><a href="#" class="text-neutral-300 hover:text-white transition-colors">隐私政策</a></li>
+                    </ul>
+                </div>
+                
+                <!-- 联系我们 -->
+                <div>
+                    <h3 class="text-lg font-bold mb-6">联系我们</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <i class="fa fa-map-marker mt-1 mr-3 text-primary"></i>
+                            <span class="text-neutral-300">北京市朝阳区建国路88号</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa fa-phone mr-3 text-primary"></i>
+                            <span class="text-neutral-300">400-123-4567</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa fa-envelope mr-3 text-primary"></i>
+                            <span class="text-neutral-300">357839586@qq.com</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa fa-clock-o mr-3 text-primary"></i>
+                            <span class="text-neutral-300">周一至周日 9:00-21:00</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-neutral-600 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-neutral-400 text-sm mb-4 md:mb-0">© 2025 精品商城. 保留所有权利.</p>
+                    <div class="flex space-x-6">
+                        <a href="#" class="text-neutral-400 hover:text-white text-sm transition-colors">隐私政策</a>
+                        <a href="#" class="text-neutral-400 hover:text-white text-sm transition-colors">服务条款</a>
+                        <a href="#" class="text-neutral-400 hover:text-white text-sm transition-colors">网站地图</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 快速查看商品模态框 -->
+    <div id="quick-view-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+        <div class="relative bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto animate-fade-in">
+            <button id="close-modal" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-500 hover:text-neutral-700 hover:bg-neutral-200 transition-colors">
+                <i class="fa fa-times"></i>
+            </button>
+            
+            <div class="p-6">
+                <div class="flex flex-col md:flex-row gap-8">
+                    <div class="md:w-1/2">
+                        <img id="modal-product-image" src="https://picsum.photos/id/96/800/800" alt="无线蓝牙耳机" class="w-full h-auto rounded-lg">
+                    </div>
+                    <div class="md:w-1/2">
+                        <h3 id="modal-product-title" class="text-2xl font-bold text-neutral-700 mb-2">无线蓝牙耳机</h3>
+                        <div class="flex items-center mb-4">
+                            <div class="flex text-yellow-400">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+                            <span class="text-neutral-500 text-sm ml-2">5.0 (215 评价)</span>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <span id="modal-product-price" class="text-primary font-bold text-2xl">¥799</span>
+                            <span id="modal-product-original-price" class="text-neutral-400 line-through text-sm ml-2">¥999</span>
+                        </div>
+                        
+                        <p id="modal-product-description" class="text-neutral-600 mb-6">主动降噪，高清通话，超长续航，舒适佩戴体验。这款无线蓝牙耳机采用最新的蓝牙5.2技术，提供稳定的连接和出色的音质表现。内置大容量电池，单次充电可使用8小时，配合充电盒可使用32小时。人体工学设计，佩戴舒适，适合长时间使用。</p>
+                        
+                        <div class="mb-6">
+                            <h4 class="font-medium mb-2">颜色</h4>
+                            <div class="flex space-x-3">
+                                <button class="w-8 h-8 rounded-full bg-black border-2 border-black"></button>
+                                <button class="w-8 h-8 rounded-full bg-white border border-neutral-300"></button>
+                                <button class="w-8 h-8 rounded-full bg-blue-600 border border-blue-600"></button>
+                                <button class="w-8 h-8 rounded-full bg-red-600 border border-red-600"></button>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-8">
+                            <h4 class="font-medium mb-2">数量</h4>
+                            <div class="flex items-center">
+                                <button class="w-10 h-10 border border-neutral-300 rounded-l-lg flex items-center justify-center hover:bg-neutral-100 transition-colors">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                                <input type="number" value="1" min="1" class="w-16 h-10 border-t border-b border-neutral-300 text-center">
+                                <button class="w-10 h-10 border border-neutral-300 rounded-r-lg flex items-center justify-center hover:bg-neutral-100 transition-colors">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <button class="add-to-cart-btn flex-grow py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors flex items-center justify-center">
+                                <i class="fa fa-shopping-cart mr-2"></i>
+                                加入购物车
+                            </button>
+                            <button class="buy-now-btn flex-grow py-3 bg-secondary text-white font-medium rounded-lg hover:bg-secondary/90 transition-colors flex items-center justify-center">
+                                立即购买
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 返回顶部按钮 -->
+    <button id="back-to-top" class="fixed bottom-6 right-6 w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white shadow-lg opacity-0 invisible transition-all duration-300 hover:bg-primary/90">
+        <i class="fa fa-arrow-up"></i>
+    </button>
+
+    <!-- JavaScript -->
+    <script>
+        // 导航栏滚动效果
+        const navbar = document.getElementById('navbar');
+        const backToTop = document.getElementById('back-to-top');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.classList.add('shadow-md');
+                navbar.classList.remove('shadow-sm');
+                backToTop.classList.remove('opacity-0', 'invisible');
+                backToTop.classList.add('opacity-100', 'visible');
+            } else {
+                navbar.classList.remove('shadow-md');
+                navbar.classList.add('shadow-sm');
+                backToTop.classList.add('opacity-0', 'invisible');
+                backToTop.classList.remove('opacity-100', 'visible');
+            }
+        });
+        
+        // 返回顶部功能
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // 移动端菜单
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // 轮播图
+        const carouselItems = document.querySelectorAll('.carousel-item');
+        const carouselDots = document.querySelectorAll('.carousel-dot');
+        const carouselArrows = document.querySelectorAll('.carousel-arrow');
+        let currentSlide = 0;
+        
+        function showSlide(index) {
+            // 隐藏所有轮播项
+            carouselItems.forEach(item => {
+                item.classList.add('opacity-0');
+                item.classList.remove('opacity-100');
+            });
+            
+            // 移除所有激活状态
+            carouselDots.forEach(dot => {
+                dot.classList.remove('bg-white');
+                dot.classList.add('bg-white/50');
+            });
+            
+            // 显示当前轮播项
+            carouselItems[index].classList.remove('opacity-0');
+            carouselItems[index].classList.add('opacity-100');
+            
+            // 设置当前点为激活状态
+            carouselDots[index].classList.remove('bg-white/50');
+            carouselDots[index].classList.add('bg-white');
+            
+            currentSlide = index;
+            currentSlide = index;
+        }
+        
+        // 下一张
+        function nextSlide() {
+            let index = currentSlide + 1;
+            if (index >= carouselItems.length) index = 0;
+            showSlide(index);
+        }
+        
+        // 上一张
+        function prevSlide() {
+            let index = currentSlide - 1;
+            if (index < 0) index = carouselItems.length - 1;
+            showSlide(index);
+        }
+        
+        // 自动轮播
+        let slideInterval = setInterval(nextSlide, 5000);
+        
+        // 点击轮播点切换轮播
+        carouselDots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                clearInterval(slideInterval);
+                showSlide(index);
+                slideInterval = setInterval(nextSlide, 5000);
+            });
+        });
+        
+        // 点击箭头切换轮播
+        carouselArrows.forEach(arrow => {
+            arrow.addEventListener('click', () => {
+                clearInterval(slideInterval);
+                if (arrow.classList.contains('fa-angle-right')) {
+                    nextSlide();
+                } else {
+                    prevSlide();
+                }
+                slideInterval = setInterval(nextSlide, 5000);
+            });
+        });
+        
+        // 快速查看商品模态框
+        const quickViewButtons = document.querySelectorAll('.quick-view-btn');
+        const quickViewModal = document.getElementById('quick-view-modal');
+        const closeModal = document.getElementById('close-modal');
+        
+        quickViewButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                quickViewModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+        
+        closeModal.addEventListener('click', () => {
+            quickViewModal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        });
+        
+        // 点击模态框背景关闭
+        quickViewModal.addEventListener('click', (e) => {
+            if (e.target === quickViewModal) {
+                quickViewModal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
+        // 分类筛选
+        const categoryFilters = document.querySelectorAll('.category-filter');
+        
+        categoryFilters.forEach(filter => {
+            filter.addEventListener('click', () => {
+                // 移除所有激活状态
+                categoryFilters.forEach(f => {
+                    f.classList.remove('bg-primary', 'text-white');
+                    f.classList.add('bg-white', 'text-neutral-600');
+                });
+                
+                // 设置当前筛选器为激活状态
+                filter.classList.remove('bg-white', 'text-neutral-600');
+                filter.classList.add('bg-primary', 'text-white');
+                
+                // 这里可以添加实际的筛选逻辑
+            });
+        });
+        
+        // 添加到购物车按钮
+        const addToCartButtons = document.querySelectorAll('.add-to-cart, .add-to-cart-btn');
+        
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // 显示添加成功的提示
+                const notification = document.createElement('div');
+                notification.className = 'fixed top-20 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-fade-in';
+                notification.textContent = '商品已成功添加到购物车！';
+                document.body.appendChild(notification);
+                
+                // 3秒后移除提示
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 300);
+                }, 3000);
+            });
+        });
+    </script>
+</body>
+</html>
+    
